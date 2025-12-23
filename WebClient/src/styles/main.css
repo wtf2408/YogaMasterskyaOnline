@@ -1,0 +1,19 @@
+h1 {
+    margin: 1rem 0 4rem 0;
+    font-size: 2.5rem;
+}
+
+.logo {
+    font-family: "El Messiri", sans-serif;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.logo .upper {
+    text-transform: uppercase;
+    color: #74C0FC;
+}
+
+.course-card {
+    margin: 35px;
+}

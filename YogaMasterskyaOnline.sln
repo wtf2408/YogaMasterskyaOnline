@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoService", "VideoService\VideoService.csproj", "{CE3BC94C-A62E-3AA4-C97B-EF5F2BE46CA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesService", "CoursesService\CoursesService.csproj", "{9EE319B2-1899-4EEE-8D27-2CBD16D7C06C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE3BC94C-A62E-3AA4-C97B-EF5F2BE46CA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE3BC94C-A62E-3AA4-C97B-EF5F2BE46CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE3BC94C-A62E-3AA4-C97B-EF5F2BE46CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE3BC94C-A62E-3AA4-C97B-EF5F2BE46CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EE319B2-1899-4EEE-8D27-2CBD16D7C06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EE319B2-1899-4EEE-8D27-2CBD16D7C06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EE319B2-1899-4EEE-8D27-2CBD16D7C06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EE319B2-1899-4EEE-8D27-2CBD16D7C06C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED52ABBC-D97D-458D-8092-EC50EE28CADD}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,26 @@
+services:
+  videoservice:
+    image: ${DOCKER_REGISTRY-}videoservice
+    ports:
+      - 8123 
+    build:
+      context: VideoService
+      dockerfile: Dockerfile
+    depends_on:                          
+      - minio
+
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - 9020:9000
+      - 9021:9001
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    volumes:
+        - minio-data:/data
+    command: server /data --console-address ":9001"
+
+volumes:
+  minio-data:

@@ -1,0 +1,49 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "VideoService.Grpc";
+
+package video;
+
+service VideoService {
+  // Загрузка видео
+  rpc UploadVideo (stream UploadVideoRequest) returns (UploadVideoResponse);
+
+  // Один presigned URL
+  rpc GetPlaybackUrl (GetPlaybackUrlRequest) returns (GetPlaybackUrlResponse);
+
+  // Несколько presigned URL (batch)
+  rpc BatchGetPlaybackUrls (BatchGetPlaybackUrlsRequest)
+      returns (BatchGetPlaybackUrlsResponse);
+}
+
+message UploadVideoRequest {
+  // Первый пакет содержит имя файла
+  string filename = 1;
+  // Остальные пакеты — куски файла
+  bytes chunk_data = 2;
+}
+
+message UploadVideoResponse {
+  string video_id = 1;
+}
+
+message GetPlaybackUrlRequest {
+  string video_id = 1;
+}
+
+message GetPlaybackUrlResponse {
+  string hls_url = 1;
+}
+
+message BatchGetPlaybackUrlsRequest {
+  repeated string video_ids = 1;
+}
+
+message BatchGetPlaybackUrlsResponse {
+  repeated PlaybackUrl items = 1;
+}
+
+message PlaybackUrl {
+  string video_id = 1;
+  string hls_url = 2;
+}
