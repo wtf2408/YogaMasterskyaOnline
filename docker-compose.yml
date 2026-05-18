@@ -1,26 +1,83 @@
 services:
-  videoservice:
-    image: ${DOCKER_REGISTRY-}videoservice
+  postgres:
+    image: postgres:16
     ports:
-      - 8123 
-    build:
-      context: VideoService
-      dockerfile: Dockerfile
-    depends_on:                          
-      - minio
-
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: YogaMasterskyaOnline
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   minio:
     image: minio/minio:latest
     ports:
-      - 9020:9000
-      - 9021:9001
+      - "9020:9000"
+      - "9021:9001"
     environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadmin123
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
     volumes:
-        - minio-data:/data
+      - minio-data:/data
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  videoservice:
+    image: ${DOCKER_REGISTRY-}videoservice
+    build:
+      context: VideoService
+      dockerfile: Dockerfile
+    ports:
+      - "8123:8123"
+      - "8124:8124"
+    environment:
+      ConnectionStrings__VideoServiceContext: "Host=postgres;Port=5432;Database=YogaMasterskyaOnline;Username=postgres;Password=admin;"
+      MinIO__Endpoint: "minio:9000"
+      Kestrel__Endpoints__Http__Url: "http://0.0.0.0:8124"
+      Kestrel__Endpoints__Grpc__Url: "http://0.0.0.0:8123"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  coursesservice:
+    image: ${DOCKER_REGISTRY-}coursesservice
+    build:
+      context: CoursesService
+      dockerfile: Dockerfile
+    ports:
+      - "5198:8080"
+    environment:
+      ConnectionStrings__CoursesServiceContext: "Host=postgres;Port=5432;Database=YogaMasterskyaOnline;Username=postgres;Password=admin;"
+      VideoService__GrpcUrl: "http://videoservice:8123"
+      CorsOrigins__0: "http://localhost:5173"
+      CorsOrigins__1: "http://localhost:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      videoservice:
+        condition: service_started
+
+  webclient:
+    build:
+      context: WebClient
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - coursesservice
 
 volumes:
+  postgres-data:
   minio-data:

@@ -8,12 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // CORS
+var corsOrigins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>()
+    ?? new[] { "http://localhost:5173" };
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(corsOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -30,14 +33,15 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Courses API",
         Version = "v1",
-        Description = "API для управления курсами и уроками"
+        Description = "API пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
     });
 });
 
 builder.Services.AddControllers();
 builder.Services.AddGrpcClient<VideoService.Grpc.VideoService.VideoServiceClient>(o =>
 {
-    o.Address = new Uri("http://localhost:8123");
+    var url = builder.Configuration["VideoService:GrpcUrl"] ?? "http://localhost:8123";
+    o.Address = new Uri(url);
 });
 
 builder.Services.Configure<FormOptions>(options =>
@@ -47,7 +51,7 @@ builder.Services.Configure<FormOptions>(options =>
     options.MemoryBufferThreshold = int.MaxValue;
 });
 
-// И в ConfigureServices (или Program.cs)
+// пїЅ пїЅ ConfigureServices (пїЅпїЅпїЅ Program.cs)
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.Limits.MaxRequestBodySize = 1073741824; // 1 GB
